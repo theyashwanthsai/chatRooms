@@ -13,9 +13,11 @@ const rooms = new Map();
 io.on('connection', (socket) => {
   console.log('A user connected');
 
-  socket.on('join', (room) => {
+  socket.on('join', ({room, name}) => {
     socket.join(room);
     socket.room = room; // Store the current room in the socket object
+    socket.name = name;
+
 
     if (!rooms.has(room)) {
       rooms.set(room, []);
@@ -25,11 +27,12 @@ io.on('connection', (socket) => {
     users.push(socket.id);
 
     // Notify everyone in the room about the new user
-    io.to(room).emit('user joined', socket.id);
+    io.to(room).emit('user joined', socket.name);
   });
 
-  socket.on('chat message', (message) => {
-    io.to(socket.room).emit('chat message', { user: socket.id, message });
+  socket.on('chat message', ({message}) => {
+    const name = socket.name;
+    io.to(socket.room).emit('show chat message', {name, message});
   });
 
   socket.on('disconnect', () => {
@@ -41,8 +44,7 @@ io.on('connection', (socket) => {
           users.splice(index, 1);
         }
       }
-      // Notify everyone in the room that a user left
-      io.to(socket.room).emit('user left', socket.id);
+      io.to(socket.room).emit('user left', socket.name);
     }
     console.log('A user disconnected');
   });
