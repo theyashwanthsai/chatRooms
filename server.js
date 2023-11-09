@@ -41,7 +41,6 @@ io.on('connection', (socket) => {
           users.splice(index, 1);
         }
       }
-
       // Notify everyone in the room that a user left
       io.to(socket.room).emit('user left', socket.id);
     }
@@ -52,3 +51,7 @@ io.on('connection', (socket) => {
 server.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
+
+
+
+
