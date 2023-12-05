@@ -14,3 +14,4 @@ Learning socket.io by building rooms
 - [x] Custom room feature
 - [ ] Voice chat
 - [ ] Video chat
+- [ ] Top level view diagram
